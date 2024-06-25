@@ -13,4 +13,9 @@ class TransactionDetail extends Model
     * GUARDED ATTRIBUTES
     */
     protected $guarded = [];
+
+    public function transaction()
+    {
+        return $this->belongsTo(Transaction::class);
+    }
 }
