@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('profits', function (Blueprint $table) {
             $table->id();
             $table->foreignId('transaction_id')->references('id')->on('transactions')->cascadeOnDelete();
-
+            $table->bigInteger('total');
             $table->timestamps();
         });
     }

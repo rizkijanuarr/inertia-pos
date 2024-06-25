@@ -27,4 +27,11 @@ class Product extends Model
             get: fn ($value) => url('/storage/products/' . $value),
         );
     }
+
+
+    // RELATIONS TO CATEGORY
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
 }
