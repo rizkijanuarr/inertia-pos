@@ -16,22 +16,41 @@ class Transaction extends Model
     */
     protected $guarded = [];
 
-
-    public function details()
-    {
-        return $this->hasMany(TransactionDetail::class);
-    }
-
-    public function customer()
-    {
-        return $this->belongsTo(Customer::class);
-    }
-
+    /**
+     * MANY TO ONE SPESIFIK
+     * TABLE TRANSACTIONS
+     *  $table->foreignId('cashier_id')->references('id')->on('users')->cascadeOnDelete();
+     */
     public function cashier()
     {
         return $this->belongsTo(User::class, 'cashier_id');
     }
 
+    /**
+    * MANY TO ONE
+    * TABLE TRANSACTIONS
+    * $table->foreignId('customer_id')->nullable()->references('id')->on('customers')->cascadeOnDelete();
+    */
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class);
+    }
+
+    /**
+    * ONE TO MANY
+    * TABLE TRANSACTIONS DETAILS
+    * $table->foreignId('transaction_id')->references('id')->on('transactions')->cascadeOnDelete();
+    */
+    public function details()
+    {
+        return $this->hasMany(TransactionDetail::class);
+    }
+
+    /**
+    * ONE TO MANY
+    * TABLE PROFITS
+    * $table->foreignId('transaction_id')->references('id')->on('transactions')->cascadeOnDelete();
+    */
     public function profits()
     {
         return $this->hasMany(Profit::class);

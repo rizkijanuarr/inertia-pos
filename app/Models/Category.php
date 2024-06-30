@@ -28,9 +28,12 @@ class Category extends Model
         );
     }
 
-    // RELATIONS TO PRODUCT
+    /**
+     * ONE TO MANY
+     */
     public function products()
     {
         return $this->hasMany(Product::class);
     }
+
 }

@@ -28,10 +28,34 @@ class Product extends Model
         );
     }
 
-
-    // RELATIONS TO CATEGORY
-    public function category()
+    /**
+    * ONE TO MANY
+    * TABLE TRANSACTIONS DETAILS
+    * $table->foreignId('transaction_id')->references('id')->on('transactions')->cascadeOnDelete();
+    */
+    public function details()
     {
-        return $this->belongsTo(Category::class);
+        return $this->hasMany(TransactionDetail::class);
     }
+
+    /**
+    * ONE TO MANY
+    * TABLE TRANSACTIONS DETAILS
+    * $table->foreignId('product_id')->references('id')->on('products')->cascadeOnDelete();
+    */
+    public function detail()
+    {
+        return $this->hasMany(TransactionDetail::class);
+    }
+
+    /**
+    * ONE TO MANY
+    * TABLE CARTS
+    * $table->foreignId('product_id')->references('id')->on('products')->cascadeOnDelete();
+    */
+    public function cart()
+    {
+        return $this->hasMany(Cart::class);
+    }
+
 }

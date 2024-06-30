@@ -16,14 +16,14 @@ class Profit extends Model
     */
     protected $guarded = [];
 
-    public function transaction()
+    /**
+    * MANY TO ONE
+    * TABLE TRANSACTIONS
+    * $table->foreignId('transaction_id')->references('id')->on('transactions')->cascadeOnDelete();
+    */
+    public function transactions()
     {
         return $this->belongsTo(Transaction::class);
-    }
-
-    public function product()
-    {
-        return $this->belongsTo(Product::class);
     }
 
     /**

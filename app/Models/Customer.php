@@ -13,4 +13,15 @@ class Customer extends Model
     * GUARDED ATTRIBUTES
     */
     protected $guarded = [];
+
+    /**
+    * ONE TO MANY
+    * TABLE TRANSACTIONS
+    * $table->foreignId('customer_id')->nullable()->references('id')->on('customers')->cascadeOnDelete();
+    */
+    public function transaction()
+    {
+        return $this->hasMany(Transaction::class);
+    }
+
 }

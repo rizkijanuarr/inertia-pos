@@ -18,7 +18,12 @@
                                     7 DAYS</span
                                 >
                             </div>
-                            <div class="card-body"></div>
+                            <div class="card-body">
+                                <BarChart
+                                    :chartData="chartSellWeek"
+                                    :options="options"
+                                />
+                            </div>
                         </div>
                     </div>
                     <div class="col-md-4">
@@ -33,9 +38,11 @@
                                 >
                             </div>
                             <div class="card-body">
-                                <strong>0</strong> SALES
+                                <strong>{{ count_sales_today }}</strong> SALES
                                 <hr />
-                                <h5 class="fw-bold">Rp. 0</h5>
+                                <h5 class="fw-bold">
+                                    Rp. {{ formatPrice(sum_sales_today) }}
+                                </h5>
                             </div>
                         </div>
 
@@ -50,7 +57,9 @@
                                 >
                             </div>
                             <div class="card-body">
-                                <h5 class="fw-bold">Rp. 0</h5>
+                                <h5 class="fw-bold">
+                                    Rp. {{ formatPrice(sum_profits_today) }}
+                                </h5>
                             </div>
                         </div>
                     </div>
@@ -72,7 +81,9 @@
                                     SELIING PRODUCT</span
                                 >
                             </div>
-                            <div class="card-body"></div>
+                            <div class="card-body">
+                                <DoughnutChart :chartData="chartBestProduct" />
+                            </div>
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -86,7 +97,37 @@
                                     STOCK</span
                                 >
                             </div>
-                            <div class="card-body"></div>
+                            <div class="card-body">
+                                <div v-if="products_limit_stock.length > 0">
+                                    <ol class="list-group list-group-numbered">
+                                        <li
+                                            v-for="product in products_limit_stock"
+                                            :key="product.id"
+                                            class="list-group-item d-flex justify-content-between align-items-start"
+                                        >
+                                            <div class="ms-2 me-auto">
+                                                <div class="fw-bold">
+                                                    {{ product.title }}
+                                                </div>
+                                                <div class="text-muted">
+                                                    Category :
+                                                    {{ product.category.name }}
+                                                </div>
+                                            </div>
+                                            <span
+                                                class="badge bg-danger rounded-pill"
+                                                >{{ product.stock }}</span
+                                            >
+                                        </li>
+                                    </ol>
+                                </div>
+                                <div
+                                    v-else
+                                    class="alert alert-danger border-0 shadow rounded-3"
+                                >
+                                    Data Tidak Tersedia!.
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -102,6 +143,16 @@ import LayoutApp from "../../../Layouts/App.vue";
 //import Heade and useForm from Inertia
 import { Head } from "@inertiajs/vue3";
 
+//import ref from vue
+import { ref } from "vue";
+
+//chart
+import { BarChart, DoughnutChart } from "vue-chart-3";
+import { Chart, registerables } from "chart.js";
+
+//register chart
+Chart.register(...registerables);
+
 export default {
     //layout
     layout: LayoutApp,
@@ -109,6 +160,95 @@ export default {
     //register component
     components: {
         Head,
+        BarChart,
+        DoughnutChart,
+    },
+
+    props: {
+        //total penjualan hari ini
+        count_sales_today: Number,
+
+        //jumlah (Rp.) penjualan hari ini
+        sum_sales_today: Number,
+
+        //jumlah profit/laba hari ini
+        sum_profits_today: Number,
+
+        //chart sales
+        sales_date: Array,
+        grand_total: Array,
+
+        //produk terlaris
+        product: Array,
+        total: Array,
+
+        //produk limit stock
+        products_limit_stock: Array,
+    },
+
+    setup(props) {
+        //method random color
+        function randomBackgroundColor(length) {
+            var data = [];
+            for (var i = 0; i < length; i++) {
+                data.push(getRandomColor());
+            }
+            return data;
+        }
+
+        //method generate random color
+        function getRandomColor() {
+            var letters = "0123456789ABCDEF".split("");
+            var color = "#";
+            for (var i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
+
+        //option chart
+        const options = ref({
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: false,
+                },
+                title: {
+                    display: false,
+                },
+            },
+            beginZero: true,
+        });
+
+        //chart sell week
+        const chartSellWeek = {
+            labels: props.sales_date,
+            datasets: [
+                {
+                    data: props.grand_total,
+                    backgroundColor: randomBackgroundColor(
+                        props.sales_date.length
+                    ),
+                },
+            ],
+        };
+
+        //chart produk terlaris
+        const chartBestProduct = {
+            labels: props.product,
+            datasets: [
+                {
+                    data: props.total,
+                    backgroundColor: randomBackgroundColor(5),
+                },
+            ],
+        };
+
+        return {
+            options,
+            chartSellWeek,
+            chartBestProduct,
+        };
     },
 };
 </script>

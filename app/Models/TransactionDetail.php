@@ -14,8 +14,23 @@ class TransactionDetail extends Model
     */
     protected $guarded = [];
 
-    public function transaction()
+    /**
+    * MANY TO ONE
+    * TABLE TRANSACTIONS DETAILS
+    * $table->foreignId('transaction_id')->references('id')->on('transactions')->cascadeOnDelete();
+    */
+    public function details()
     {
         return $this->belongsTo(Transaction::class);
+    }
+
+    /**
+    * MANY TO ONE
+    * TABLE TRANSACTIONS DETAILS
+    * $table->foreignId('product_id')->references('id')->on('products')->cascadeOnDelete();
+    */
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
     }
 }
